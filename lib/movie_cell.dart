@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:movieapp/movie.dart';
 
 class MovieCell extends StatelessWidget {
-  const MovieCell(this.movies, this.i, {super.key});
+  const MovieCell({required this.movie, super.key});
   static const String imageUrl = 'https://image.tmdb.org/t/p/w500/';
-  final List<dynamic> movies;
-  final int i;
+  final Movie movie;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class MovieCell extends StatelessWidget {
         Row(
           children: <Widget>[
             CachedNetworkImage(
-              imageUrl: imageUrl + movies[i]['poster_path'],
+              imageUrl: imageUrl + movie.poster_path,
               height: 150,
               filterQuality: FilterQuality.none,
             ),
@@ -26,7 +26,7 @@ class MovieCell extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    movies[i]['title'],
+                    movie.title,
                     style: TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold,
@@ -35,7 +35,7 @@ class MovieCell extends StatelessWidget {
                   ),
                   const Padding(padding: EdgeInsets.all(2.0)),
                   Text(
-                    movies[i]['overview'],
+                    movie.overview,
                     maxLines: 3,
                     style: const TextStyle(color: Colors.black),
                   )

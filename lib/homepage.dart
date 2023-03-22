@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  List<dynamic>? movies;
+  List<Movie>? movies;
 
   @override
   void initState() {
@@ -44,7 +44,7 @@ class HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) {
-                      return MovieDetail(movies![i]);
+                      return MovieDetail(movie: movies![i]);
                     }),
                   );
                 },
@@ -54,7 +54,7 @@ class HomePageState extends State<HomePage> {
                     borderRadius: BorderRadius.circular(4.0),
                   ),
                 ),
-                child: MovieCell(movies!, i),
+                child: MovieCell(movie: movies![i]),
               ),
             );
           }),
@@ -67,10 +67,10 @@ class HomePageState extends State<HomePage> {
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      final data = json.decode(response.body);
+      final Map<String, dynamic> data = json.decode(response.body);
 
       setState(() {
-        movies = data['results'];
+        movies = List.from(data['results']).map((e) => Movie.fromJson(e)).toList();
       });
     }
   }

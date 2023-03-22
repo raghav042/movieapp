@@ -2,10 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
+import 'movie.dart';
+
 class MovieDetail extends StatelessWidget {
-  const MovieDetail(this.movie, {super.key});
-  final Map<String, dynamic> movie;
-  final imageUrl = 'https://image.tmdb.org/t/p/w500/';
+  const MovieDetail({required this.movie, super.key});
+
+  static const  imageUrl = 'https://image.tmdb.org/t/p/w500/';
+  final Movie movie;
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +16,7 @@ class MovieDetail extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: CachedNetworkImageProvider(imageUrl + movie['poster_path']),
+          image: CachedNetworkImageProvider(imageUrl + movie.poster_path),
           fit: BoxFit.cover,
           filterQuality: FilterQuality.none,
         ),
@@ -41,7 +44,7 @@ class MovieDetail extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width / 1.5,
                       child: Text(
-                        movie['title'],
+                        movie.title,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 30.0,
@@ -49,7 +52,7 @@ class MovieDetail extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '${movie['vote_average']}/10',
+                      movie.adult.toString(),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20.0,
@@ -59,7 +62,7 @@ class MovieDetail extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  movie['overview'],
+                  movie.overview,
                   style: const TextStyle(
                     color: Colors.white,
                   ),
