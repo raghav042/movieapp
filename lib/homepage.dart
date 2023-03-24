@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -15,6 +14,8 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   List<Movie>? movies;
+  List<Movie>? allMovies;
+  String? searchWord;
 
   @override
   void initState() {
@@ -24,40 +25,64 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Movies'),
       ),
-      body: ListView.builder(
-          shrinkWrap: true,
-          itemCount: movies == null ? 0 : movies?.length,
-          itemBuilder: (context, i) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 8,
-              ),
-              child: OutlinedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) {
-                      return MovieDetail(movie: movies![i]);
-                    }),
-                  );
-                },
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.all(4),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4.0),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: TextFormField(
+                onChanged: searchMovies,
+                decoration: InputDecoration(
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                    },
+                    icon: const Icon(Icons.search),
                   ),
+                  border: const OutlineInputBorder(),
                 ),
-                child: MovieCell(movie: movies![i]),
               ),
-            );
-          }),
+            ),
+            ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: movies == null ? 0 : movies?.length,
+                itemBuilder: (context, i) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 8,
+                    ),
+                    child: OutlinedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  MovieDetail(movie: movies![i])),
+                        );
+                      },
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.all(4),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                      ),
+                      child: MovieCell(
+                        movie: movies![i],
+                        searchWord: searchWord,
+                      ),
+                    ),
+                  );
+                }),
+          ],
+        ),
+      ),
     );
   }
 
@@ -70,8 +95,19 @@ class HomePageState extends State<HomePage> {
       final Map<String, dynamic> data = json.decode(response.body);
 
       setState(() {
-        movies = List.from(data['results']).map((e) => Movie.fromJson(e)).toList();
+        allMovies =
+            List.from(data['results']).map((e) => Movie.fromJson(e)).toList();
+        movies = allMovies;
       });
     }
+  }
+
+  void searchMovies(String text) {
+    movies = allMovies
+        ?.where((element) => element.title.toLowerCase().contains(text))
+        .toList();
+    setState(() {
+      searchWord = text;
+    });
   }
 }

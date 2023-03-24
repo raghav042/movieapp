@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:movieapp/movie.dart';
 
 class MovieCell extends StatelessWidget {
-  const MovieCell({required this.movie, super.key});
+  MovieCell({required this.movie, required this.searchWord, super.key});
   static const String imageUrl = 'https://image.tmdb.org/t/p/w500/';
   final Movie movie;
+  final String? searchWord;
+  List<InlineSpan> inlineSpan = [];
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       children: <Widget>[
         Row(
@@ -25,14 +28,7 @@ class MovieCell extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    movie.title,
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                      color: colorScheme.primary,
-                    ),
-                  ),
+                  RichText(text: title()),
                   const Padding(padding: EdgeInsets.all(2.0)),
                   Text(
                     movie.overview,
@@ -47,4 +43,36 @@ class MovieCell extends StatelessWidget {
       ],
     );
   }
+
+  TextSpan title() {
+    if (searchWord == null) {
+      inlineSpan.add(TextSpan(text: movie.title, style: normalTextStyle));
+    }
+
+    if (searchWord != null) {
+      inlineSpan.add(TextSpan(
+          text: movie.title.split(searchWord!).first, style: normalTextStyle));
+      inlineSpan.add(TextSpan(text: searchWord, style: searchTextStyle));
+      inlineSpan.add(
+        TextSpan(
+          text:
+              movie.title.split(searchWord!).last.substring(searchWord!.length),
+          style: normalTextStyle,
+        ),
+      );
+    }
+
+    return TextSpan(children: inlineSpan);
+  }
+
+  static const TextStyle searchTextStyle = TextStyle(
+    color: Colors.black,
+    backgroundColor: Colors.yellow,
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+  );
+  static const TextStyle normalTextStyle = TextStyle(
+    color: Colors.black,
+    fontSize: 20,
+  );
 }

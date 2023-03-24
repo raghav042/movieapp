@@ -1,5 +1,5 @@
 class Movie {
-  Movie(
+  const Movie(
     this.adult,
     this.backdrop_path,
     this.genre_ids,

@@ -1,7 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'dart:ui' as ui;
-
 import 'movie.dart';
 
 class MovieDetail extends StatelessWidget {
@@ -82,7 +80,8 @@ class MovieDetail extends StatelessWidget {
                         'Rate Movie',
                         style: TextStyle(
                             color: colorScheme.onPrimaryContainer,
-                            fontSize: 20.0),
+                            fontSize: 20.0,
+                        ),
                       ),
                     ),
                     Padding(
@@ -122,4 +121,8 @@ class MovieDetail extends StatelessWidget {
       ),
     );
   }
+
+
+
+
 }
