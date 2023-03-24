@@ -7,11 +7,10 @@ class MovieCell extends StatelessWidget {
   static const String imageUrl = 'https://image.tmdb.org/t/p/w500/';
   final Movie movie;
   final String? searchWord;
-  List<InlineSpan> inlineSpan = [];
+
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
 
     return Column(
       children: <Widget>[
@@ -45,6 +44,7 @@ class MovieCell extends StatelessWidget {
   }
 
   TextSpan title() {
+    List<InlineSpan> inlineSpan = [];
     if (searchWord == null) {
       inlineSpan.add(TextSpan(text: movie.title, style: normalTextStyle));
     }
